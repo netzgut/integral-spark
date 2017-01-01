@@ -1,0 +1,16 @@
+<web-app xmlns='http://java.sun.com/xml/ns/j2ee' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' version='2.5' xsi:schemaLocation='http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd' metadata-complete="true">
+    <filter>
+        <filter-name>SparkTapestryFilter</filter-name>
+        <filter-class>net.netzgut.integral.spark.SparkTapestryFilter</filter-class>
+         <init-param>
+            <param-name>autodiscoverSearchSpec</param-name>
+            <param-value>net.netzgut</param-value>
+        </init-param>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>SparkTapestryFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+</web-app>

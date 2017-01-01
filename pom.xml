@@ -5,7 +5,7 @@
   <artifactId>integral-spark</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <name>integral-spark</name>
-  <description>Integrate Tapestry great IOC into Spark</description>
+  <description>Integrate Tapestry IOC into Spark</description>
   <url>https://github.com/netzgut/integral-spark</url>
   <inceptionYear>2017</inceptionYear>
   <licenses>

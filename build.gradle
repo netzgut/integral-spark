@@ -13,7 +13,7 @@ plugins {
 
 group 'net.netzgut.integral'
 version '0.0.1-SNAPSHOT'
-description 'Integrate Tapestry great IOC into Spark'
+description 'Integrate Tapestry IOC into Spark'
 
 sourceCompatibility = '1.8'
 targetCompatibility = '1.8'

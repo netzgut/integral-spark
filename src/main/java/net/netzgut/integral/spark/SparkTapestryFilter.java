@@ -35,7 +35,8 @@ import spark.utils.StringUtils;
 
 public class SparkTapestryFilter extends SparkFilter {
 
-    private static final Logger LOG                            = LoggerFactory.getLogger(SparkTapestryFilter.class);
+    private static final Logger          LOG                            =
+        LoggerFactory.getLogger(SparkTapestryFilter.class);
 
     /**
      * If you use the autodicover feature the filter searches all availables class in any
@@ -45,9 +46,11 @@ public class SparkTapestryFilter extends SparkFilter {
      * https://github.com/lukehutch/fast-classpath-scanner/wiki/2.-Constructor
      * for more infos about the the spec.
      */
-    private static final String AUTODISCOVER_SEARCH_SPEC_PARAM = "autodiscoverSearchSpec";
+    private static final String          AUTODISCOVER_SEARCH_SPEC_PARAM = "autodiscoverSearchSpec";
 
-    private Registry            registry;
+    private Registry                     registry;
+
+    private final List<SparkApplication> applications                   = new ArrayList<>();
 
     @SuppressWarnings("rawtypes")
     @Override
@@ -77,14 +80,13 @@ public class SparkTapestryFilter extends SparkFilter {
         this.registry =
             RegistryBuilder.buildAndStartupRegistry(tapestryModules.stream().toArray(size -> new Class[size]));
 
-        List<SparkApplication> allApplications = new ArrayList<>();
         for (Class<? extends SparkApplication> application : applicationClasses) {
             LOG.debug("Autobuilding: {}", application);
             SparkApplication app = this.registry.autobuild(application);
-            allApplications.add(app);
+            this.applications.add(app);
         }
 
-        return allApplications.stream().toArray(size -> new SparkApplication[size]);
+        return this.applications.stream().toArray(size -> new SparkApplication[size]);
     }
 
     @SuppressWarnings("rawtypes")
@@ -114,14 +116,15 @@ public class SparkTapestryFilter extends SparkFilter {
         }
         else {
             LOG.debug("Autodiscover Search Spec: {}", searchSpec);
-
             scanner = new FastClasspathScanner(searchSpec.split(","));
         }
 
-        scanner.matchClassesImplementing(SparkApplication.class, (applicationClass) -> {
-            detectTapestryModules(applicationClass, tapestryModules);
-            applicationClasses.add(applicationClass);
-        }).scan();
+        scanner.matchClassesImplementing(SparkApplication.class, //
+                                         (applicationClass) -> {
+                                             detectTapestryModules(applicationClass, tapestryModules);
+                                             applicationClasses.add(applicationClass);
+                                         })
+               .scan();
     }
 
     @SuppressWarnings("rawtypes")
@@ -153,6 +156,14 @@ public class SparkTapestryFilter extends SparkFilter {
         }
 
         return (Class<? extends SparkApplication>) clazz;
+    }
+
+    @Override
+    public void destroy() {
+        super.destroy();
+
+        this.registry.shutdown();
+        this.applications.forEach(SparkApplication::destroy);
     }
 
 }

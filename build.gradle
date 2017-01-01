@@ -1,0 +1,113 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+}
+
+plugins {
+    id 'java'
+    id 'maven'
+    id 'nebula.provided-base' version '3.1.0'
+    id 'com.github.hierynomus.license' version '0.13.1'
+}
+
+group 'net.netzgut.integral'
+version '0.0.1-SNAPSHOT'
+description 'Integrate Tapestry great IOC into Spark'
+
+sourceCompatibility = '1.8'
+targetCompatibility = '1.8'
+
+project.ext.inceptionYear = '2017'
+project.ext.github = 'integral-spark'
+
+repositories {
+    mavenCentral()
+    jcenter()
+    mavenLocal()
+}
+
+project.ext.versions = [
+    // compile
+    slf4j: '1.7.21',
+    tapestry: '5.4.1',
+    fastClasspathScanner: '2.0.9',
+    // provided
+    spark: '2.5.4'
+
+]
+
+dependencies {
+    compile "org.slf4j:slf4j-log4j12:${versions.slf4j}"
+    compile "org.apache.tapestry:tapestry-ioc:${versions.tapestry}"
+    compile "io.github.lukehutch:fast-classpath-scanner:${versions.fastClasspathScanner}"
+
+    provided "com.sparkjava:spark-core:${versions.spark}"
+}
+
+task wrapper(type: Wrapper) { gradleVersion = '3.2.1' }
+
+task pom {
+    doLast {
+        pom {
+            packaging = 'jar'
+            project {
+                inceptionYear inceptionYear
+                name rootProject.name
+                description project.description
+                url "https://github.com/netzgut/$github"
+                properties { 'project.build.sourceEncoding' 'UTF-8' }
+                licenses {
+                    license {
+                        name 'The Apache Software License, Version 2.0'
+                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                        distribution 'repo'
+                    }
+                }
+                scm {
+                    url "https://github.com/netzgut/$github"
+                    connection "scm:git:git://github.com/netzgut/${github}.git"
+                    developerConnection "scm:git:git@github.com:netzgut/${github}.git"
+                }
+            }
+        }.withXml { xmlProvider ->
+            def plugins = xmlProvider.asNode().appendNode('build').appendNode('plugins')
+            def mavenCompilerPlugin = plugins.appendNode('plugin')
+            mavenCompilerPlugin.appendNode('artifactId').value = 'maven-compiler-plugin'
+            mavenCompilerPlugin.appendNode('version').value = '3.1'
+            def mavenCompilerPluginConfiguration = mavenCompilerPlugin.appendNode('configuration')
+            mavenCompilerPluginConfiguration.appendNode('source').value = sourceCompatibility
+            mavenCompilerPluginConfiguration.appendNode('target').value = targetCompatibility
+        }.writeTo('pom.xml')
+    }
+}
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+artifacts {
+	archives sourcesJar
+}
+
+uploadArchives {
+    // We need to set the variables if not present
+    ext.snapshot_repository = project.hasProperty('snapshot-repository') ? project.property('snapshot-repository') : ''
+    ext.snapshot_repository_username = project.hasProperty('snapshot-repository-username') ? project.property('snapshot-repository-username') : ''
+    ext.snapshot_repository_password = project.hasProperty('snapshot-repository-password') ? project.property('snapshot-repository-password') : ''
+
+    repositories {
+        mavenDeployer {
+            snapshotRepository(url: snapshot_repository) {
+                authentication(userName: snapshot_repository_username, password: snapshot_repository_password)
+            }
+        }
+    }
+}
+
+license {
+    header rootProject.file('src/main/resources/META-INF/LICENSE.txt')
+    strictCheck true
+    ext.year = Calendar.getInstance().get(Calendar.YEAR)
+}

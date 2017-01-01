@@ -1,0 +1,7 @@
+integral-spark
+Copyright 2017 Netzgut GmbH
+
+This product includes code adapted from:
+
+Spark (http://sparkjava.com/)
+Copyright 2015 Per Wendel

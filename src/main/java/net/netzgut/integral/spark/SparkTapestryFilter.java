@@ -15,12 +15,16 @@
  */
 package net.netzgut.integral.spark;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
+import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 
 import org.apache.tapestry5.ioc.Registry;
 import org.apache.tapestry5.ioc.RegistryBuilder;
@@ -156,6 +160,17 @@ public class SparkTapestryFilter extends SparkFilter {
         }
 
         return (Class<? extends SparkApplication>) clazz;
+    }
+
+    @Override
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
+                                                                                              ServletException {
+        try {
+            super.doFilter(request, response, chain);
+        }
+        finally {
+            this.registry.cleanupThread();
+        }
     }
 
     @Override

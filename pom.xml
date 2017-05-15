@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>net.netzgut.integral</groupId>
   <artifactId>integral-spark</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>0.0.2-SNAPSHOT</version>
   <name>integral-spark</name>
   <description>Integrate Tapestry IOC into Spark</description>
   <url>https://github.com/netzgut/integral-spark</url>
@@ -27,25 +27,25 @@
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-log4j12</artifactId>
-      <version>1.7.21</version>
+      <version>1.7.22</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.tapestry</groupId>
       <artifactId>tapestry-ioc</artifactId>
-      <version>5.4.1</version>
+      <version>5.4.2</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>io.github.lukehutch</groupId>
       <artifactId>fast-classpath-scanner</artifactId>
-      <version>2.0.9</version>
+      <version>2.0.21</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>com.sparkjava</groupId>
       <artifactId>spark-core</artifactId>
-      <version>2.5.4</version>
+      <version>2.6.0</version>
       <scope>provided</scope>
     </dependency>
   </dependencies>

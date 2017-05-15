@@ -8,11 +8,11 @@ plugins {
     id 'java'
     id 'maven'
     id 'nebula.provided-base' version '3.1.0'
-    id 'com.github.hierynomus.license' version '0.13.1'
+    id 'com.github.hierynomus.license' version '0.14.0'
 }
 
 group 'net.netzgut.integral'
-version '0.0.1-SNAPSHOT'
+version '0.0.2-SNAPSHOT'
 description 'Integrate Tapestry IOC into Spark'
 
 sourceCompatibility = '1.8'
@@ -29,11 +29,11 @@ repositories {
 
 project.ext.versions = [
     // compile
-    slf4j: '1.7.21',
-    tapestry: '5.4.1',
-    fastClasspathScanner: '2.0.9',
+    slf4j: '1.7.22',
+    tapestry: '5.4.2',
+    fastClasspathScanner: '2.0.21',
     // provided
-    spark: '2.5.4'
+    spark: '2.6.0'
 
 ]
 
@@ -45,7 +45,7 @@ dependencies {
     provided "com.sparkjava:spark-core:${versions.spark}"
 }
 
-task wrapper(type: Wrapper) { gradleVersion = '3.2.1' }
+task wrapper(type: Wrapper) { gradleVersion = '3.5' }
 
 task pom {
     doLast {
